@@ -35,7 +35,7 @@ h1 {
 main {
   flex-basis: auto;
   padding: 2rem 0;
-  background-image: radial-gradient(73% 147%, #EADFDF 59%, #ECE2DF 100%), radial-gradient(91% 146%, rgba(255,255,255,0.50) 47%, rgba(0,0,0,0.50) 100%);
+  background-image: radial-gradient(73% 147%, #EADFDF 59%, #ECE2DF 100%), radial-gradient(91% 146%, rgba(255,255,255,0.50) 47%, rgba(0,0,0,0.50) 100%), url(https://api.btstu.cn/sjbz/api.php?lx=dongman&format=images&width=200&height=400);
   background-blend-mode: screen;
 }
 
