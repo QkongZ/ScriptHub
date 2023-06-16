@@ -12,9 +12,9 @@ header {
   text-align: center;
   flex-grow: 0;
 }
-/* #head*/
-
-
+#head {
+  background-image: url('https://api.btstu.cn/sjbz/api.php?lx=dongman&format=images');
+}
 #nav .item {
   display: inline-block;
   width: -webkit-fill-available;
