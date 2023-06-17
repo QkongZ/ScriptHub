@@ -2,7 +2,7 @@ body { width: -webkit-fill-available; height: 100%; display: flex; flex-directio
 
 header { text-align: center; flex-grow: 0; } 
 
-#head { background-image:url(https://api.btstu.cn/sjbz/api.php?lx=dongman&format=images&width=200&height=200); } 
+#head { background-image:url(https://bing.img.run/m.php); } 
 
 #nav .item { display: inline-block; width: -webkit-fill-available; } h1 { display: inline-block; } 
 
