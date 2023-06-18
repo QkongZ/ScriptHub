@@ -25,3 +25,6 @@ footer { flex-grow: 0; }
 #seller .list { padding: 0 5rem; } 
 
 @media screen and (max-width: 479px) { p { width: -webkit-fill-available; text-align: center; line-height: 1.5rem; word-wrap: break-word; } }
+
+.audio-container{position:fixed;top:20px;right:20px;background-color:#00BFFF;width:30px;height:30px;border-radius:5px;cursor:pointer;z-index:9999;}.audio-container:hover{opacity:0.8;}.audio-icon{display:flex;align-items:center;justify-content:center;color:#FFFFFF;font-size:18px;height:100%;}.audio-icon:before{content:'\25B6';}.audio{display:none;}
+
