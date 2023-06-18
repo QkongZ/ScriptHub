@@ -24,7 +24,7 @@
 
 #waifu {
 	bottom: -1000px;
-	right: 0;
+	right: -600px;
 	line-height: 0;
 	margin-bottom: -10px;
 	position: fixed;
@@ -68,9 +68,9 @@
 
 #live2d {
 	cursor: grab;
-	height: 200px;
+	height: 25%;
 	position: relative;
-	width: 100%;
+	width: 25%;
 }
 
 #live2d:active {
