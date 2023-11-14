@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原神启动</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- 引入Font Awesome图标库 -->
+    <style>
+        /* 设置全屏样式 */
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* 设置初始背景图片 */
+        body {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-image: url('./static/images/ys.png'); /* 设置第一个图片的路径 */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: background-image 1.5s ease-in-out; /* 渐变效果 */
+        }
+
+        /* 添加媒体查询以适配小屏幕（例如手机） */
+        @media (max-width: 768px) {
+            body {
+                background-size: contain; /* 适配小屏幕，保持图片完整显示 */
+                background-attachment: scroll; /* 允许滚动以查看完整图片 */
+            }
+        }
+
+        /* 图标按钮样式 */
+        .icon-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面内容为空，因为我们只需要全屏展示图片 -->
+
+    <!-- 自动播放的音乐 -->
+    <audio id="bgAudio">
+        <source src="./static/music/bg.m4a" type="audio/mp4">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- 播放/暂停图标按钮 -->
+    <button class="icon-button" id="playPauseButton">
+        <i class="fas fa-play"></i> <!-- 默认显示播放图标 -->
+    </button>
+
+    <script>
+        var audio = document.getElementById('bgAudio');
+        var playPauseButton = document.getElementById('playPauseButton');
+
+        // 设置音乐从第5秒开始播放
+        audio.currentTime = 5;
+
+        // 点击按钮切换播放状态
+        playPauseButton.addEventListener('click', function() {
+            if (audio.paused) {
+                audio.play();
+                playPauseButton.innerHTML = '<i class="fas fa-pause"></i>'; // 切换到暂停图标
+            } else {
+                audio.pause();
+                playPauseButton.innerHTML = '<i class="fas fa-play"></i>'; // 切换到播放图标
+            }
+        });
+
+        // 检测浏览器语言
+        var browserLanguage = navigator.language || navigator.userLanguage;
+
+        // 检测是否是手机访问
+        var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+        // 跳转逻辑
+        function redirectToUrl() {
+            if (isMobile) {
+                // 如果是手机，尝试跳转到APP
+                window.location.href = 'yuanshengame://';
+            }
+
+            if (browserLanguage !== 'zh-CN') {
+                // 如果浏览器语言不是简体中文，跳转到https://genshin.hoyoverse.com/
+                window.location.href = 'https://genshin.hoyoverse.com/';
+            } else {
+                // 否则，跳转到https://ys.mihoyo.com/
+                window.location.href = 'https://ys.mihoyo.com/';
+            }
+        }
+
+        // 5秒后进行跳转
+        setTimeout(redirectToUrl, 5000);
+
+        // 在页面加载后切换背景图片
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.body.style.backgroundImage = "url('./static/images/qd.png')";
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
