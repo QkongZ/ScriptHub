@@ -8,12 +8,16 @@ GH_EMAIL=$GH_EMAIL    # GitHub 邮箱
 DAYS=${DAYS:-5}       # 保留几天的备份文件
 NAME=$NAME            # 备份项目名称
 BACKUP_FILE=$BACKUP_FILE  # 自定义备份路径
-SHOULD_STOP_PROJECT="false"  # 是否需要停止项目，默认不停止
-USE_GPG="false" # 默认不启用 GPG 加密
-GPG_KEY=""  # 如果启用加密，需提供密钥
+SHOULD_STOP_PROJECT=${SHOULD_STOP_PROJECT:-"false"} # 是否需要停止项目，默认不停止
+USE_GPG=${USE_GPG:-"false"} # 默认不启用 GPG 加密
+GPG_KEY=${GPG_KEY:-""}  # 如果启用加密，需提供密钥
 
 # 时间戳
 TIMESTAMP=$(date "+%Y-%m-%d-%H-%M")
+
+# GitHub API 基础 URL
+GH_API="https://api.github.com"
+GH_UPLOAD_URL="https://$GH_BACKUP_USER:$GH_PAT@github.com/$GH_REPO.git"
 
 # 检查 GitHub 私库连接是否有效
 if ! curl --output /dev/null --silent --head --fail "$GH_API"; then
@@ -38,9 +42,6 @@ if ! git config --get user.name >/dev/null || ! git config --get user.email >/de
     echo "GitHub 用户名或邮箱未设置"
     exit 1
 fi
-# GitHub API 基础 URL
-GH_API="https://api.github.com"
-GH_UPLOAD_URL="https://$GH_BACKUP_USER:$GH_PAT@github.com/$GH_REPO.git"
 
 
 stop_project() {
@@ -66,13 +67,6 @@ backup() {
         stop_project
     fi
 
-    # 判断是否需要 GPG 加密
-    if [[ "$USE_GPG" == "true" ]]; then
-        echo "对备份文件进行 GPG 加密..."
-        gpg --yes --batch --output "$TMP_DIR/${TAR_NAME}.gpg" --encrypt --recipient "$GPG_KEY" "$TMP_DIR/$TAR_NAME"
-        TAR_NAME="${TAR_NAME}.gpg"
-    fi
-
     # 创建 /tmp 目录中的临时目录用于操作
     TMP_DIR=$(mktemp -d -t backup-XXXXXX)
 
@@ -80,6 +74,13 @@ backup() {
     cd "$BACKUP_FILE" || exit
     TAR_NAME="${NAME}_${TIMESTAMP}.tar.gz"
     tar -czf "$TMP_DIR/$TAR_NAME" .
+
+    # 判断是否需要 GPG 加密
+    if [[ "$USE_GPG" == "true" ]]; then
+        echo "对备份文件进行 GPG 加密..."
+        gpg --yes --batch --output "$TMP_DIR/${TAR_NAME}.gpg" --encrypt --recipient "$GPG_KEY" "$TMP_DIR/$TAR_NAME"
+        TAR_NAME="${TAR_NAME}.gpg"
+    fi
 
     # 克隆私库到 /tmp 中
     git clone "$GH_UPLOAD_URL" "$TMP_DIR/repo"
@@ -89,10 +90,13 @@ backup() {
     mkdir -p "$NAME"
     mv "$TMP_DIR/$TAR_NAME" "$NAME/"
 
-    # 提交并推送备份文件
+    # 更新 README.md，将旧备份关键词清空或重置为 "backup"
+    echo "backup" > README.md
+
+     # 提交并推送备份文件和 README.md
     git config user.name "$GH_BACKUP_USER"
     git config user.email "$GH_EMAIL"
-    git add "$NAME/"
+    git add "$NAME/" README.md
     git commit -m "备份 ${TAR_NAME} for project $NAME"
     git push
 
@@ -162,7 +166,7 @@ restore() {
     if [[ "$USE_GPG" == "true" ]]; then
         echo "对备份文件进行 GPG 解密..."
         gpg --yes --batch --output "$TMP_DIR/${RESTORE_FILE%.gpg}" --decrypt "$NAME/$RESTORE_FILE"
-        RESTORE_FILE="${RESTORE_FILE%.gpg}"
+        RESTORE_FILE="$TMP_DIR/${RESTORE_FILE%.gpg}"
     fi
 
     
