@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#例如每天凌晨 2 点更新一次
+#crontab -e && 0 2 * * * /bin/bash UFW_whitelist_for_CF.sh
+
 # Cloudflare 的 IP 地址列表
 CLOUDFLARE_IPV4_URL="https://www.cloudflare.com/ips-v4"
 CLOUDFLARE_IPV6_URL="https://www.cloudflare.com/ips-v6"
